@@ -1,4 +1,3 @@
-
 /**
  * Module dependencies.
  */
@@ -62,13 +61,14 @@ subscriber.on("message", function (channel, message) {
 subscriber.subscribe("location-key");
 
 
-
+/* // Demonstrate publish messages 
 var demoPublish = redis.createClient();
 setInterval(function(){
     var key = "LOC-KEY-"+(Date.now());
     demoPublish.set(key, JSON.stringify({"lat" : 53.293281, "lon" : -2.732691 }));
     demoPublish.publish("location-key", key);
-},2000);
+},2000); 
+*/
 
 
 
