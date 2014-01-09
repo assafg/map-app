@@ -13,18 +13,17 @@
     <script src="/socket.io/socket.io.js"></script>
     <script>
         var socket = io.connect('http://localhost');
-        socket.on('news', function (data) {
-            console.log(data);
-            socket.emit('my other event', { my: 'data' });
-        });
 
-        socket.on('location', function(location){
-            console.log(location);
-            new google.maps.Marker({
-                position: new google.maps.LatLng(location.lat, location.lon),
-                map: map,
-                title:"Hello World!"
-            });
+        socket.on('location', function(locations){
+            console.log(locations);
+            for(var i=0; i< locations.length; i++){
+                new google.maps.Marker({
+                    position: new google.maps.LatLng(locations[i].lat, locations[i].lon),
+                    map: map,
+                    title: locations[i].title
+                });    
+            }
+            
         });
 
 
