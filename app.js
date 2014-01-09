@@ -9,8 +9,11 @@ var http = require('http');
 var path = require('path')
 var io = require('socket.io');
 var redis = require("redis"),
-    client = redis.createClient('/tmp/redis.sock'),
-    subscriber = redis.createClient('/tmp/redis.sock');
+client = redis.createClient(),
+subscriber = redis.createClient();
+//    client = redis.createClient('/tmp/redis.sock'),
+//    subscriber = redis.createClient('/tmp/redis.sock');
+//
 
 var app = express();
 

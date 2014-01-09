@@ -23,8 +23,10 @@
 
     function initialize() {
         var mapOptions = {
-            center: new google.maps.LatLng(53.278532,-2.702459 ),
-            zoom: 8
+            //center: new google.maps.LatLng(53.278532,-2.702459 ),
+           // zoom: 8
+	   center: new google.maps.LatLng(46.5559,	-95.4047 ),
+	   zoom: 4
         };
         map = new google.maps.Map(document.getElementById("map-canvas"),
                 mapOptions);
@@ -32,9 +34,9 @@
         var markers = [];
         socket.on('location', function(locations){
             //Remove previouse markers:
-            for(var m in markers){
-                markers[m].setMap(null);
-            }
+//            for(var m in markers){
+//                markers[m].setMap(null);
+//            }
 
 
             console.log(locations);
