@@ -60,14 +60,23 @@ subscriber.on("message", function (channel, message) {
 
 subscriber.subscribe("location-key");
 
-
-/* // Demonstrate publish messages 
-var demoPublish = redis.createClient();
+/*
+ // Demonstrate publish messages
+var demoPublish = redis.createClient('/tmp/redis.sock');
 setInterval(function(){
+    var lat = 53.293281;
+    var lon = -2.732691;
+    var locations = [];
+    for(var i=0;i<10; i++){
+        var factor = 0.01 * Math.random();
+        locations.push({"lat" : lat + factor, "lon" : lon + factor, title: factor+"" });
+    }
     var key = "LOC-KEY-"+(Date.now());
-    demoPublish.set(key, JSON.stringify({"lat" : 53.293281, "lon" : -2.732691 }));
+    demoPublish.set(key, JSON.stringify(locations));
+    demoPublish.expire(key, 60);
     demoPublish.publish("location-key", key);
-},2000); 
+
+},20000);
 */
 
 

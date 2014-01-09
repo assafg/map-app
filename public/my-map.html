@@ -11,38 +11,52 @@
             src="https://maps.googleapis.com/maps/api/js?&sensor=false">
     </script>
     <script src="/socket.io/socket.io.js"></script>
-    <script>
-        var socket = io.connect('http://localhost');
 
-        socket.on('location', function(locations){
-            console.log(locations);
-            for(var i=0; i< locations.length; i++){
-                new google.maps.Marker({
-                    position: new google.maps.LatLng(locations[i].lat, locations[i].lon),
-                    map: map,
-                    title: locations[i].title
-                });    
-            }
-            
-        });
-
-
-        var map = null;
-
-        function initialize() {
-            var mapOptions = {
-                center: new google.maps.LatLng(53.278532,-2.702459 ),
-                zoom: 8
-            };
-            map = new google.maps.Map(document.getElementById("map-canvas"),
-                    mapOptions);
-
-
-        }
-        google.maps.event.addDomListener(window, 'load', initialize);
-    </script>
 </head>
 <body>
 <div id="map-canvas"/>
+
+
+<script>
+    var map = null;
+    var socket = io.connect('http://localhost');
+
+    function initialize() {
+        var mapOptions = {
+            center: new google.maps.LatLng(53.278532,-2.702459 ),
+            zoom: 8
+        };
+        map = new google.maps.Map(document.getElementById("map-canvas"),
+                mapOptions);
+
+        var markers = [];
+        socket.on('location', function(locations){
+            //Remove previouse markers:
+            for(var m in markers){
+                markers[m].setMap(null);
+            }
+
+
+            console.log(locations);
+            for(var i=0; i< locations.length; i++){
+                var marker = new google.maps.Marker({
+                    position: new google.maps.LatLng(locations[i].lat, locations[i].lon),
+                    map: map,
+                    title: locations[i].title
+                });
+                markers.push(marker);
+            }
+
+        });
+
+    }
+
+
+
+
+
+
+    google.maps.event.addDomListener(window, 'load', initialize);
+</script>
 </body>
 </html>
