@@ -8,12 +8,18 @@ var user = require('./routes/user');
 var http = require('http');
 var path = require('path')
 var io = require('socket.io');
-var redis = require("redis"),
-client = redis.createClient(),
-subscriber = redis.createClient();
-//    client = redis.createClient('/tmp/redis.sock'),
-//    subscriber = redis.createClient('/tmp/redis.sock');
-//
+var kafka = require('kafka-node'),
+    client = new kafka.Client('localhost:2181/kafka0.8', 'kafka-node-client'),
+    Consumer = kafka.Consumer,
+    consumer = new Consumer(
+        client,
+        [
+            { topic: 'locations-topic', partition: 0 }
+        ],
+        {
+            autoCommit: false
+        }
+    );
 
 var app = express();
 
@@ -49,9 +55,8 @@ sio.sockets.on('connection', function (socket) {
     console.log('A socket connected!');
 });
 
-
-subscriber.on("message", function (channel, message) {
-    console.log("client1 channel " + channel + ": " + message);
+consumer.on('message', function (message) {
+    console.log(message);
     client.get(message, function(err, value){
         if(err){
             return console.log(err);
@@ -60,27 +65,6 @@ subscriber.on("message", function (channel, message) {
         sio.sockets.emit('location',JSON.parse(value));
     });
 });
-
-subscriber.subscribe("location-key");
-
-/*
- // Demonstrate publish messages
-var demoPublish = redis.createClient('/tmp/redis.sock');
-setInterval(function(){
-    var lat = 53.293281;
-    var lon = -2.732691;
-    var locations = [];
-    for(var i=0;i<10; i++){
-        var factor = 0.01 * Math.random();
-        locations.push({"lat" : lat + factor, "lon" : lon + factor, title: factor+"" });
-    }
-    var key = "LOC-KEY-"+(Date.now());
-    demoPublish.set(key, JSON.stringify(locations));
-    demoPublish.expire(key, 60);
-    demoPublish.publish("location-key", key);
-
-},20000);
-*/
 
 
 
